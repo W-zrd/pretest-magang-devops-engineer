@@ -1,0 +1,1 @@
+![alt](/tasks/result.png)

@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:14.2
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: tabeldata
+      POSTGRES_USER: rfdhaikal
+      POSTGRES_PASSWORD: th1s_is_w333zard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    image: dimmaryanto93/udemy-springboot-app:latest
+    container_name: backend-app
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: postgres-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: tabeldata
+      DATABASE_USER: rfdhaikal
+      DATABASE_PASSWORD: th1s_is_w333zard
+      APPLICATION_PORT: 8080
+    depends_on:
+      - db
+
+  frontend:
+    image: dimmaryanto93/udemy-angular-app:latest
+    container_name: frontend-app
+    ports:
+      - "80:80"
+    environment:
+      APPLICATION_PORT: 80
+      NGINX_ROOT_DOCUMENT: /var/www/html
+      BACKEND_HOST: backend-app
+      BACKEND_PORT: 8080
+      BACKEND_CONTEXT_PATH: /
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
